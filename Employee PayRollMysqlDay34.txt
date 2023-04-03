@@ -1,0 +1,349 @@
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+UC1 : Ability to create a payroll service database
+
+mysql> CREATE DATABASE payrollServices2;
+Query OK, 1 row affected (0.01 sec)
+
+=========================================================================================
+
+UC 2:  Ability to create a employee payroll tablein the payroll service database to
+manage employee payrolls
+
+mysql> USE payrollservices2;
+Database changed
+mysql> CREATE TABLE employee_payroll(id int auto_increment PRIMARY KEY,name VARCHAR(55),salary Double,start DATE);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql>  DESCRIBE employee_payroll;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(55) | YES  |     | NULL    |                |
+| salary | double      | YES  |     | NULL    |                |
+| start  | date        | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+===========================================================================================
+
+UC 3:Ability to create employee payroll data in the payroll service database as part of
+CRUD Operation
+
+
+mysql> INSERT INTO employee_payroll (name, salary, start) VALUES ('Pallavi',650000,'2022-08-03'),('Vaibhavi',2000000.00,'2022-10-10'),('Akash',150000.00,'2022-12-20');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+===========================================================================================
+
+
+UC 4 : Ability to retrieve all the employee payroll data that is added to payroll service
+database...
+
+
+mysql> SELECT * FROM employee_payroll;
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  1 | Pallavi |  650000 | 2022-08-03 |
+|  2 | Vaibhav | 2000000 | 2022-10-10 |
+|  3 | Akash   |  150000 | 2022-12-20 |
++----+---------+---------+------------+
+3 rows in set (0.00 sec)
+
+===========================================================================================
+UC 5 :  Ability to retrieve salary data for a particular employee as well as all employees who have joined in a particular data range from the payroll service database...
+
+mysql> SELECT salary FROM employee_payroll WHERE name='Pallavi';
++--------+
+| salary |
++--------+
+| 650000 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> describe employee_payroll;
++--------+-------------+------+-----+---------+----------------+
+| Field  | Type        | Null | Key | Default | Extra          |
++--------+-------------+------+-----+---------+----------------+
+| id     | int         | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(55) | YES  |     | NULL    |                |
+| salary | double      | YES  |     | NULL    |                |
+| start  | date        | YES  |     | NULL    |                |
++--------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM employee_payroll;
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  1 | Pallavi |  650000 | 2022-08-03 |
+|  2 | Vaibhav | 2000000 | 2022-10-10 |
+|  3 | Akash   |  150000 | 2022-12-20 |
++----+---------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO employee_payroll (name, salary, start) VALUES ('Pallavi',650000,'2022-08-03');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM employee_payroll;
++----+---------+---------+------------+
+| id | name    | salary  | start      |
++----+---------+---------+------------+
+|  1 | Pallavi |  650000 | 2022-08-03 |
+|  2 | Vaibhav | 2000000 | 2022-10-10 |
+|  3 | Akash   |  150000 | 2022-12-20 |
+|  4 | Pallavi |  650000 | 2022-08-03 |
++----+---------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM employee_payroll WHERE start BETWEEN CAST('2022-10-05' AS DATE) AND DATENOW(NOW());
+ERROR 1305 (42000): FUNCTION payrollservices2.DATENOW does not exist
+mysql>  SELECT * FROM employee_payroll WHERE start BETWEEN CAST('2022-10-05' AS DATE) AND DATE(NOW());
++----+----------+---------+------------+
+| id | name     | salary  |   start    |
++----+----------+---------+------------+
+|  2 | Vaibhav  | 2000000 | 2022-10-10 |
+|  3 | Akash    |  150000 | 2022-12-20 |
++----+-------+---------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE employee_payroll ADD gender CHAR(1) AFTER name;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Pallavi | NULL   |  650000 | 2022-08-03 |
+|  2 | Vaibhav | NULL   | 2000000 | 2022-10-10 |
+|  3 | Akash   | NULL   |  150000 | 2022-12-20 |
+|  4 | Pallavi | NULL   |  650000 | 2022-08-03 |
++----+---------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+===========================================================================================
+
+UC 6 : Ability to add Gender to Employee Payroll Table and Update the Rows to
+reflect the correct Employee Gender....
+
+mysql> Update employee_payroll set gender = 'F' where name = 'Pallavi';
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> Query OK, 1 row affected (0.01 sec)
+    -> ^C
+mysql> SELECT * FROM employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Pallavi | F      |  750000 | 2022-08-03 |
+|  2 | Vaibhav | NULL   | 2000000 | 2022-10-10 |
+|  3 | Akash   | NULL   |  150000 | 2022-12-20 |
+|  4 | Praveen | M      |  750000 | 2022-08-03 |
++----+---------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+==========================================================================================
+
+UC 7 : Ability to find sum, average, min, max and number of male and female employees...
+
+
+
+mysql> SELECT SUM(salary) FROM employee_payroll WHERE gender ='M' GROUP BY gender;
+Empty set (0.00 sec)
+
+mysql> Empty set (0.00 sec)
+    -> ^C
+mysql> Update employee_payroll set gender = 'M' where name = 'Vaibhav';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> Query OK, 1 row affected (0.01 sec)
+    -> ^C
+mysql> ^C
+mysql>  SELECT * FROM employee_payroll;
++----+---------+--------+---------+------------+
+| id | name    | gender | salary  | start      |
++----+---------+--------+---------+------------+
+|  1 | Pallavi |  F     |  750000 | 2022-08-03 |
+|  2 | Vaibhav |  M     | 2000000 | 2022-10-10 |
+|  3 | Akash   | NULL   |  150000 | 2022-12-20 |
+|  4 | Pallavi |  F     |  750000 | 2022-08-03 |
++----+---------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql>  Update employee_payroll set name='Shambhavi' where salary = 150000;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM employee_payroll;
++----+----------+--------+---------+------------+
+| id | name     | gender | salary  | start      |
++----+----------+--------+---------+------------+
+|  1 | Pallavi  | F      |  650000 | 2022-08-03 |
+|  2 | Vaibhav  | M      | 2000000 | 2022-10-10 |
+|  3 | Shambhavi| NULL   |  150000 | 2022-12-20 |
+|  4 | Pallavi  | F      |  750000 | 2022-08-03 |
++----+----------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> Update employee_payroll set gender = 'F' where name = 'Shambhavi';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql>  SELECT * FROM employee_payroll;
++----+-----------+--------+---------+------------+
+| id | name      | gender | salary  | start      |
++----+-----------+--------+---------+------------+
+|  1 | Pallavi   | F      |  650000 | 2022-08-03 |
+|  2 | Vaibhav   | M      | 2000000 | 2022-10-10 |
+|  3 | Shambhavi | F      |  150000 | 2022-12-20 |
+|  4 | Pallavi   | M      |  650000 | 2022-08-03 |
++----+-----------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT SUM(salary) FROM employee_payroll WHERE gender ='F' GROUP BY gender;
++-------------+
+| SUM(salary) |
++-------------+
+|      650000 |
++-------------+
+|      150000 |
++-------------+
+|      650000 |
++-------------+
+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUM(salary) FROM employee_payroll WHERE gender ='M' GROUP BY gender;
++-------------+
+| SUM(salary) |
++-------------+
+|     2000000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MIN(salary) FROM employee_payroll WHERE gender ='M' GROUP BY gender;
++-------------+
+| MIN(salary) |
++-------------+
+|      650000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MAX(salary) FROM employee_payroll WHERE gender ='M' GROUP BY gender;
++-------------+
+| MAX(salary) |
++-------------+
+|     2000000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(salary) FROM employee_payroll WHERE gender ='M' GROUP BY gender;
++---------------+
+| COUNT(salary) |
++---------------+
+|             1 |
++---------------+
+1 row in set (0.00 sec)
+
+==========================================================================================
+
+UC 8 : Ability to extend employee_payroll data to store employee information
+like employee phone, address and department.....
+
+
+mysql> Alter table employee_payroll add column phonenumber varchar(55) after name;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column address varchar(55) after phonenumber;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column department varchar(55) after address;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+-------------+---------+------------+--------+---------+------------+
+| id | name     | phonenumber | address | department | gender | salary  | start      |
++----+----------+-------------+---------+------------+--------+---------+------------+
+|  1 | Pallavi  | NULL        | NULL    | NULL       | F      |  650000 | 2022-08-03 |
+|  2 | Vaibhav  | NULL        | NULL    | NULL       | M      | 2000000 | 2022-10-10 |
+|  3 | Shambhavi| NULL        | NULL    | NULL       | F      |  150000 | 2022-12-20 |
+|  4 | Pallavi  | NULL        | NULL    | NULL       | F      |  650000 | 2022-08-03 |
++----+----------+-------------+---------+------------+--------+---------+------------+
+4 rows in set (0.00 sec)
+
+==========================================================================================
+
+UC 9 : Ability to extend employee_payroll table to have Basic Pay,Deductions, Taxable Pay,
+Income Tax, Net Pay...
+
+mysql> Alter table employee_payroll add column basic_pay double after gender;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column deductions double after basic_pay;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column taxable_pay double after deductions;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column tax double after taxable_pay;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> Alter table employee_payroll add column net_pay double after tax;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+------+---------+---------+------------+
+| id | name      | phonenumber | address | department | gender | basic_pay | deductions | taxable_pay | tax  | net_pay | salary  | start      |
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+------+---------+---------+------------+
+|  1 | Pallavi   | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL | NULL |    NULL |  650000 | 2022-08-03 |
+|  2 | Vaibhav   | NULL        | NULL    | NULL       | M      |      NULL |       NULL |        NULL | NULL |    NULL | 2000000 | 2022-10-10 |
+|  3 | Shambhavi | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL | NULL |    NULL |  150000 | 2022-12-20 |
+|  4 | Pallavi   | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL | NULL |    NULL |  650000 | 2022-08-03 |
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+------+---------+---------+------------+
+4 rows in set (0.00 sec)
+
+===========================================================================================
+
+UC 10 :  Ability to make Terissa as part of Sales and Marketing Department....
+
+mysql> INSERT INTO employee_payroll(id,name,department,gender,basic_pay,start) values(5,'Terisa','Sales','F',3000000,'2019-11-13');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO employee_payroll(id,name,department,gender,basic_pay,deductions,taxable_pay,tax,net_pay,start) values(6,'Terisa','Marketing','F',3000000,1000000,2000000,500000,1500000,'2019-11-13');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from employee_payroll;
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+--------+---------+---------+------------+
+| id | name      | phonenumber | address | department | gender | basic_pay | deductions | taxable_pay | tax    | net_pay | salary  | start      |
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+--------+---------+---------+------------+
+|  1 | Pallavi   | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL |   NULL |    NULL |  650000 | 2022-08-03 |
+|  2 | Vaibhav   | NULL        | NULL    | NULL       | M      |      NULL |       NULL |        NULL |   NULL |    NULL | 2000000 | 2022-10-10 |
+|  3 | Shambhavi | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL |   NULL |    NULL |  150000 | 2022-12-20 |
+|  4 | Pallavi   | NULL        | NULL    | NULL       | F      |      NULL |       NULL |        NULL |   NULL |    NULL |  650000 | 2022-08-03 |
+|  5 | Terisa    | NULL        | NULL    | Sales      | F      |   3000000 |       NULL |        NULL |   NULL |    NULL |    NULL | 2019-11-13 |
+|  6 | Terisa    | NULL        | NULL    | Marketing  | F      |   3000000 |    1000000 |     2000000 | 500000 | 1500000 |    NULL | 2019-11-13 |
++----+-----------+-------------+---------+------------+--------+-----------+------------+-------------+--------+---------+---------+------------+
+6 rows in set (0.00 sec)
+
+===========================================================================================
+mysql>
